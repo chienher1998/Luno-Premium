@@ -6,39 +6,35 @@ import {generateMYRTicker} from './lib/luno.js'
 import {generateExchangeRate} from './lib/exchange-rate.js'
 import {getBinanceBTCPriceInUSD} from './lib/binance.js' 
 
-let currency = await inputCurrency()
+let currency = inputCurrency()
 
 async function displayPrice(){
-    const myr = await generateMYRTicker(currency);
-    console.log(`${currency}MYR price on Luno: ${'MYR'.padStart(15)} ${myr}`);
+    const myrLuno = await generateMYRTicker(currency);
+    console.log(`${currency}MYR price on Luno: ${'MYR'.padStart(15)} ${parseFloat(myrLuno).toFixed(3)}`);
 
     const usdmyr = await generateExchangeRate();
-    console.log(`USDMYR: ${JSON.stringify(usdmyr).padStart(32)}`)
+    console.log(`USDMYR: ${'MYR'.padStart(29)} ${usdmyr}`);//converting usdmyr tostring
 
-    const USDTicker =  myr / usdmyr;
-    console.log(`${currency}USD price on Luno: ${'USD'.padStart(15)} ${USDTicker}`);
+    const USDTickerLuno =  await (myrLuno / usdmyr);
+    console.log(`${currency}USD price on Luno: ${'USD'.padStart(15)} ${USDTickerLuno}`);
 
     const binanceTicker = await getBinanceBTCPriceInUSD(currency); // Pass currency as argument
     console.log(`BTCUSD price on Binance: ${'USD'.padStart(12)} ${binanceTicker}`)
 
-    const priceDiff = USDTicker - binanceTicker;
+    const priceDiff = await (USDTickerLuno - binanceTicker);
     console.log(`Price Difference: ${'USD'.padStart(19)} ${priceDiff.toString()}`);
 
-    const lunoPrem = (priceDiff) * 100; 
-    console.log(`Luno Premium: ${lunoPrem.toFixed(4).padStart(30)} %`)
+    const lunoPrem = (priceDiff/USDTickerLuno) * 100; 
+    console.log(`Luno Premium: ${lunoPrem.toFixed(4).padStart(26)} %`)
 
     console.log(`________________________________________________________________`)
 }
 
-async function run() {
-    for (let i = 1; i <= Infinity; i++) {
+async function loop() {
+    for (let i = 1; i < Infinity; i++) {
         await displayPrice();
         await new Promise(resolve => setTimeout(resolve, 5000));
         //promise to delay for another 5 sec before starting next loop
     }
 }
-run();
-
-
-
-
+loop();

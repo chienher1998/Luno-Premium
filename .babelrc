@@ -1,0 +1,11 @@
+// this is jest file
+{
+    
+    "env": {
+      "test": {
+        "plugins": [
+          "@babel/plugin-transform-modules-commonjs"
+        ]
+      }
+    }
+  }
