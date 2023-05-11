@@ -13,7 +13,7 @@ async function displayPrice(){
     console.log(`${currency}MYR price on Luno: ${'MYR'.padStart(15)} ${parseFloat(myrLuno).toFixed(3)}`);
 
     const usdmyr = await generateExchangeRate();
-    console.log(`USDMYR: ${'MYR'.padStart(29)} ${usdmyr}`);//converting usdmyr tostring
+    console.log(`USDMYR: ${'MYR'.padStart(29)} ${usdmyr}`);
 
     const USDTickerLuno =  await (myrLuno / usdmyr);
     console.log(`${currency}USD price on Luno: ${'USD'.padStart(15)} ${USDTickerLuno}`);
